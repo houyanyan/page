@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>分页插件</title>
+	<script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+	<script src="jquery.page.js"></script>　
+	<style>
+		*{ margin:0; padding:0; list-style:none;}
+    	a{ text-decoration:none;}
+    	a:hover{ text-decoration:none;}
+    	.tcdPageCode{padding: 26px 20px;text-align: left;color: #ccc;text-align:center;}
+    	.tcdPageCode a{display: inline-block;color: #428bca;display: inline-block;height: 25px;	line-height: 25px;	/* padding: 0 10px */;border: 1px solid #ddd;	margin: 0 2px;border-radius: 4px;vertical-align: middle;}
+    	.tcdPageCode a:hover{text-decoration: none;border: 1px solid #428bca;}
+    	.tcdPageCode span.current{display: inline-block;height: 25px;line-height: 25px;/* padding: 0 10px; */margin: 0 2px;color: #fff;background-color: #009944;	border: 1px solid #009944;border-radius: 4px;vertical-align: middle;}
+    	.tcdPageCode span.disabled{	display: inline-block;height: 25px;line-height: 25px;/* padding: 0 10px */;margin: 0 2px;	color: #bfbfbf;background: #f2f2f2;border: 1px solid #bfbfbf;border-radius: 4px;vertical-align: middle;}
+	</style>
+</head>
+<body>
+	<div class="main"></div>
+	<div id="tcdPageCode" class="tcdPageCode"></div>
+</body> 
+</html>
+<script>
+$(function(){
+	
+	var page = 1;
+	$.getJSON("json.json",function(data){
+		questionlist(data,page);
+	})
+
+	function  questionlist(data,page){
+		console.log(data);
+		var html="";
+		for(var i=0;i<data.content.length/16;i++){
+			html+='<p>'+data.content[i].index+'</p>';
+		}
+		$(".main").html(html);
+		if(data.content.length>5){
+			$("#tcdPageCode").createPage({
+				pageCount:data.content.length,
+				current:page,
+				backFn:function(p){
+					$("#tcdPageCode").unbind();
+	                questionlist(data,p);
+				}
+			})
+		}
+	}
+})
+</script>
